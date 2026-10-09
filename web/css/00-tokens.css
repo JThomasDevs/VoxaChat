@@ -1,0 +1,185 @@
+/* 00-tokens — Voxa design tokens (ported from Odysseus static/css/00-tokens.css) */
+
+/* ── Variables ──
+ *
+ * Theme-public variables (override via theme.js or custom themes):
+ *   Core:     --bg, --fg, --panel, --border, --red
+ *   Syntax:   --hl-keyword, --hl-string, --hl-comment, --hl-function,
+ *             --hl-number, --hl-builtin, --hl-variable, --hl-params,
+ *             --hl-bg, --hl-fg
+ *   Accents:  --accent-primary, --accent-error (set by theme.js)
+ *   Semantic: --color-error, --color-success, --color-warning, --color-danger,
+ *             --color-accent, --color-muted, --color-muted-alt
+ */
+
+:root {
+  /* Core palette */
+  --bg: #282c34;
+  --fg: #9cdef2;
+  --panel: #111;
+  --border: #355a66;
+  --red: #e06c75;
+  --green: #50fa7b;
+  --warn: #f0ad4e;
+
+  /* Syntax highlighting */
+  --hl-bg: #1e2228;
+  --hl-fg: #9cdef2;
+  --hl-keyword: #c678dd;
+  --hl-string: #e5c07b;
+  --hl-comment: #828997;
+  --hl-function: #61afef;
+  --hl-number: #d19a66;
+  --hl-builtin: #56b6c2;
+  --hl-variable: #abb2bf;
+  --hl-params: #a8c0d4;
+
+  /* Semantic colors */
+  --color-error: #ff4444;
+  --color-error-light: #ff6666;
+  --color-success: #4caf50;
+  --color-warning: #f0ad4e;
+  --color-danger: #c0392b;
+  --color-recording: #ff3b30;
+  --color-recording-hover: #d63031;
+  --color-muted: #888;
+  --color-muted-alt: #6b7280;
+  /* Follows theme accent (--red); never a fixed blue that fights presets */
+  --color-accent: var(--red);
+  --accent: var(--red);
+  --accent-primary: var(--red);
+  --send-btn-bg: var(--red);
+  --send-btn-hover: color-mix(in srgb, var(--red) 82%, black);
+  --input-bg: var(--panel);
+  --input-border: var(--border);
+  --user-bubble-bg: color-mix(in srgb, var(--red) 22%, var(--panel));
+  --ai-bubble-bg: var(--panel);
+  --bubble-border: var(--border);
+  --color-agent-active: #00ff00;
+  --color-brand-blue: #3b82f6;
+  --color-blind-orange: #ff9800;
+  --color-save-green: var(--color-success);
+  --color-link-hover: #66c7ff;
+  --color-subheader: #6b8a94;
+  --select-bg: var(--bg);
+  --select-fg: var(--fg);
+  --select-option-bg: color-mix(in srgb, var(--panel) 74%, var(--bg));
+  --select-option-fg: var(--fg);
+  --select-option-active-bg: color-mix(in srgb, var(--accent, var(--red)) 24%, var(--panel));
+  --accent-warm: #d19a66;
+}
+
+:root.light {
+  --bg: #f5f5f5;
+  --fg: #2b2b2b;
+  --panel: #fff;
+  --border: #bbb;
+  --hl-bg: #f9f9f9;
+  --hl-fg: #2b2b2b;
+  --hl-keyword: #7928a1;
+  --hl-string: #986801;
+  --hl-comment: #6a737d;
+  --hl-function: #005cc5;
+  --hl-number: #986801;
+  --hl-builtin: #0070a0;
+  --hl-variable: #383a42;
+  --hl-params: #4a4f5c;
+  --select-bg: #eaeaea;
+  --select-fg: var(--fg);
+  --select-option-bg: var(--panel);
+  --select-option-fg: var(--fg);
+  --select-option-active-bg: color-mix(in srgb, var(--red) 16%, var(--panel));
+}
+
+/* Self-hosted Fira Code font */
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url('/static/fonts/FiraCode-Light.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/static/fonts/FiraCode-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/static/fonts/FiraCode-SemiBold.woff2') format('woff2');
+}
+
+/* Self-hosted OpenDyslexic — dyslexia-friendly accessibility font option (SIL OFL 1.1) */
+@font-face {
+  font-family: 'OpenDyslexic';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/static/fonts/OpenDyslexic-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('/static/fonts/OpenDyslexic-Bold.woff2') format('woff2');
+}
+
+/* Scrollbar styling */
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--panel);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--red);
+    border-radius: 4px;
+    border: 2px solid var(--panel);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in srgb, var(--red) 80%, white);
+  }
+}
+
+html {
+  scrollbar-color: var(--red) var(--panel);
+  scrollbar-width: thin;
+}
+
+/* ── Density Overrides ── */
+
+:root.density-compact {
+  font-size: 13px;
+}
+:root.density-compact .msg {
+  padding: 6px 10px;
+  margin-bottom: 4px;
+}
+:root.density-compact .list-item {
+  padding: 4px 8px;
+}
+:root.density-compact .sidebar .section {
+  padding: 0;
+}
+
+:root.density-spacious {
+  font-size: 16px;
+}
+:root.density-spacious .msg {
+  padding: 14px 18px;
+  margin-bottom: 12px;
+}
+:root.density-spacious .list-item {
+  padding: 8px 12px;
+}
+:root.density-spacious .sidebar .section {
+  padding: 0;
+}

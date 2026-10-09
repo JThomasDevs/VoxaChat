@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoxaChat</title>
+  <meta name="theme-color" content="#282c34">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='%23e06c75'/%3E%3C/svg%3E">
+  <script>
+  (function () {
+    try {
+      var t = JSON.parse(localStorage.getItem('voxachat-theme'));
+      if (t && t.colors) {
+        var s = document.documentElement.style;
+        var c = t.colors;
+        if (c.bg) s.setProperty('--bg', c.bg);
+        if (c.fg) s.setProperty('--fg', c.fg);
+        if (c.panel) s.setProperty('--panel', c.panel);
+        if (c.border) s.setProperty('--border', c.border);
+        if (c.red) s.setProperty('--red', c.red);
+        var mtc = document.querySelector('meta[name="theme-color"]');
+        if (mtc && c.bg) mtc.setAttribute('content', c.bg);
+      }
+      if (t && t.font) {
+        var fm = { mono: "'Fira Code', monospace", sans: "system-ui, -apple-system, 'Segoe UI', sans-serif", serif: "Georgia, 'Times New Roman', serif", opendyslexic: "'OpenDyslexic', sans-serif" };
+        var font = t.font === 'gohu' || t.font === 'GohuFont' ? 'mono' : t.font;
+        if (fm[font]) document.documentElement.style.setProperty('--font-family', fm[font]);
+      }
+      if (t && t.density && t.density !== 'comfortable') {
+        document.documentElement.classList.add('density-' + t.density);
+      }
+      if (t && t.frosted) document.documentElement.classList.add('voxa-frosted-pending');
+    } catch (e) {}
+    try {
+      var mode = localStorage.getItem('voxachat-sidebar-mode') || 'full';
+      if (mode === 'mini') document.documentElement.classList.add('voxa-sidebar-mini');
+      if (mode === 'off') document.documentElement.classList.add('voxa-sidebar-off');
+    } catch (e) {}
+  })();
+  </script>
+  <link rel="stylesheet" href="/static/css/00-tokens.css?v=theme9">
+  <link rel="stylesheet" href="/static/css/theme-effects.css?v=theme9">
+  <link rel="stylesheet" href="/static/css/shell.css?v=theme9">
+  <link rel="stylesheet" href="/static/css/theme-modal.css?v=theme9">
+  <link rel="stylesheet" href="/static/style.css?v=theme9">
+</head>
+<body>
+  <div id="sidebar-backdrop" aria-hidden="true"></div>
+  <div id="app-shell">
+    <div class="icon-rail" id="icon-rail">
+      <button type="button" class="icon-rail-btn" data-voxa-nav="chat" title="Chat" aria-label="Chat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      <button type="button" class="icon-rail-btn" data-voxa-nav="theme" title="Theme" aria-label="Theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20 5 5 0 0 0 5-5 3 3 0 0 0-3-3h-2a3 3 0 0 1-3-3 5 5 0 0 1 5-5"/></svg></button>
+    </div>
+    <aside id="app-sidebar" aria-label="App">
+      <div class="app-sidebar-header">
+        <button type="button" id="sidebar-toggle-btn" class="sidebar-hamburger" title="Collapse to icons" aria-expanded="true" aria-label="Collapse sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="app-sidebar-brand">VoxaChat</span>
+      </div>
+      <nav class="app-sidebar-nav">
+        <button type="button" data-voxa-nav="chat" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Chat</span></button>
+        <button type="button" data-voxa-nav="theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20 5 5 0 0 0 5-5 3 3 0 0 0-3-3h-2a3 3 0 0 1-3-3 5 5 0 0 1 5-5"/></svg><span>Theme</span></button>
+      </nav>
+      <div class="app-sidebar-footer"><span id="health"></span></div>
+    </aside>
+    <main id="workspace">
+    <section id="panel-chat" class="panel" active>
+      <div class="chat-layout">
+        <aside id="chat-sidebar" class="chat-sidebar">
+          <button type="button" id="chat-new" class="secondary">New chat</button>
+          <div id="chat-session-list" class="chat-session-list"></div>
+        </aside>
+        <div class="chat-main">
+          <div class="chat-header">
+            <button type="button" id="chat-sidebar-toggle" class="secondary small" aria-expanded="true" title="Toggle sessions">Sessions</button>
+            <select id="chat-model" class="chat-model"></select>
+            <label class="chat-run-everything" title="Auto-approve write batch, shell, and sensitive tools. Plan Approve still required.">
+              <input type="checkbox" id="chat-run-everything">
+              Run everything
+            </label>
+            <div class="chat-workspace">
+              <span class="chat-workspace-label">Workspace:</span>
+              <span id="chat-workspace-roots" class="chat-workspace-roots"></span>
+              <button id="chat-workspace-add" type="button" class="secondary small chat-workspace-add" title="Add workspace folder" aria-label="Add workspace folder">+</button>
+            </div>
+            <button id="chat-clear" class="secondary">Clear history</button>
+          </div>
+          <div id="chat-tools-note" class="status" hidden></div>
+          <!-- chat-history: Wave 3 renders .msg.decision-pick and .msg.tool-permission-pending here -->
+          <div id="chat-history" class="chat-history"></div>
+          <div id="chat-status" class="status"></div>
+          <div id="chat-plan-resume-hint" class="chat-plan-resume-hint" hidden>Plan in progress â€” send a message to continue</div>
+          <div class="chat-input-area">
+            <div id="chat-image-previews" class="chat-image-previews" hidden></div>
+            <div class="chat-input-row">
+              <input type="file" id="chat-image-input" accept="image/*" multiple hidden>
+              <button type="button" id="chat-attach" class="secondary" title="Attach image">Attach</button>
+              <textarea id="chat-input" rows="1" placeholder="Message... (Enter to send, Shift+Enter for new line)"></textarea>
+              <button id="chat-send">Send</button>
+              <button id="chat-stop" class="secondary" hidden>Stop</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    </main>
+  </div>
+
+  <div id="theme-modal" class="modal hidden">
+    <div id="theme-popup" class="modal-content admin-modal-content" role="dialog" aria-label="Theme" style="background:var(--bg)">
+      <div class="modal-header theme-popup-header" id="theme-popup-header">
+        <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 0 0 0 20 4 4 0 0 1 0-8 4 4 0 0 0 0-8"/><circle cx="8" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="14" r="1.5" fill="currentColor"/><circle cx="9" cy="15" r="1.5" fill="currentColor"/></svg>Theme</h4>
+        <button class="close-btn" id="close-theme-popup" aria-label="Close theme">&#x2716;</button>
+      </div>
+      <div class="admin-tabs" id="theme-tabs">
+        <button type="button" class="admin-tab active" data-tab="theme-tab-browse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 0 0 0 20 4 4 0 0 1 0-8 4 4 0 0 0 0-8"/><circle cx="8" cy="9" r="1.4" fill="currentColor"/><circle cx="15" cy="14" r="1.4" fill="currentColor"/><circle cx="9" cy="15" r="1.4" fill="currentColor"/></svg>Themes</button>
+        <button type="button" class="admin-tab" data-tab="theme-tab-customize"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M9.06 11.9l-3.5 3.5a2.85 2.85 0 1 0 4.03 4.03l8.49-8.49a4.5 4.5 0 1 0-6.36-6.36L3.18 12.62"/><path d="M14 7l3 3"/></svg>Customize</button>
+      </div>
+
+      <div id="theme-tab-browse" class="theme-tab-panel">
+        <div class="admin-card">
+          <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;opacity:0.6"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 0 0 0 20 4 4 0 0 1 0-8 4 4 0 0 0 0-8"/></svg>Default Themes</h2>
+          <div class="theme-grid" id="themeGrid"></div>
+        </div>
+        <div class="admin-card" id="themeUserCard" style="display:none">
+          <h2>Your Themes</h2>
+          <div class="theme-grid" id="themeUserGrid"></div>
+        </div>
+      </div>
+
+      <div id="theme-tab-customize" class="theme-tab-panel" style="display:none">
+        <div class="admin-card">
+          <h2>Colors</h2>
+          <div class="theme-custom" id="themeCustom">
+            <div class="color-row"><label>Background</label><input type="color" id="clr-bg"></div>
+            <div class="color-row"><label>Text</label><input type="color" id="clr-fg"></div>
+            <div class="color-row"><label>Panel</label><input type="color" id="clr-panel"></div>
+            <div class="color-row"><label>Border</label><input type="color" id="clr-border"></div>
+            <div class="color-row"><label>Accent</label><input type="color" id="clr-red"></div>
+          </div>
+        </div>
+        <div class="admin-card">
+          <h2>Font &amp; Layout</h2>
+          <div class="theme-fd-row">
+            <div class="theme-fd-group">
+              <label class="theme-fd-label">Font</label>
+              <select id="theme-font-select" class="theme-fd-select" aria-label="Font">
+                <option value="mono">Monospace</option>
+                <option value="sans">Sans-serif</option>
+                <option value="serif">Serif</option>
+                <option value="opendyslexic">OpenDyslexic (dyslexia-friendly)</option>
+              </select>
+            </div>
+            <div class="theme-fd-group">
+              <label class="theme-fd-label">Density</label>
+              <select id="theme-density-select" class="theme-fd-select" aria-label="Density">
+                <option value="compact">Compact</option>
+                <option value="comfortable" selected>Comfortable</option>
+                <option value="spacious">Spacious</option>
+              </select>
+            </div>
+            <div class="theme-fd-group" id="theme-frosted-group">
+              <label class="theme-fd-label" for="theme-frosted-toggle">Frosted</label>
+              <label class="admin-switch" style="margin-top:4px;">
+                <input type="checkbox" id="theme-frosted-toggle">
+                <span class="admin-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="theme-fd-row">
+            <div class="theme-fd-group" style="flex:1 1 0;">
+              <label class="theme-fd-label">Background / Effect</label>
+              <select id="theme-bg-pattern-select" class="theme-fd-select">
+                <option value="none">Solid</option>
+                <option value="dots">Dots</option>
+                <option value="synapse">Synapse</option>
+                <option value="rain">Rain</option>
+                <option value="constellations">Constellations</option>
+                <option value="perlin-flow">Perlin Flow</option>
+                <option value="petals">Petals</option>
+                <option value="sparkles">Sparkles</option>
+                <option value="embers">Embers</option>
+                <option value="starfield-depth">Starfield Depth</option>
+                <option value="ascii-fireflies">ASCII Fireflies</option>
+              </select>
+            </div>
+            <div class="theme-fd-group" style="flex:0 0 auto;align-items:center;">
+              <label class="theme-fd-label">&nbsp;</label>
+              <div class="color-row" style="margin:0;padding:0;">
+                <input type="color" id="theme-bg-effect-color" value="#9cdef2" title="Effect color">
+              </div>
+            </div>
+          </div>
+          <div class="theme-fd-row">
+            <div class="theme-fd-group" id="theme-bg-intensity-group" style="flex:1 1 0;">
+              <label class="theme-fd-label">Intensity</label>
+              <input type="range" id="theme-bg-intensity" class="theme-fd-range" min="0" max="100" step="5" value="100">
+            </div>
+            <div class="theme-fd-group" id="theme-bg-size-group" style="flex:1 1 0;">
+              <label class="theme-fd-label">Size</label>
+              <input type="range" id="theme-bg-size" class="theme-fd-range" min="30" max="250" step="10" value="100">
+            </div>
+            <div class="theme-fd-group" id="theme-bg-speed-group" style="flex:1 1 0;">
+              <label class="theme-fd-label">Speed</label>
+              <input type="range" id="theme-bg-speed" class="theme-fd-range" min="5" max="250" step="5" value="100">
+            </div>
+          </div>
+        </div>
+        <div class="admin-card" style="margin-top:8px;">
+          <h2>Save / Share</h2>
+          <div class="theme-save-row" id="theme-save-row">
+            <input type="text" id="theme-save-name" placeholder="Theme name..." maxlength="32">
+            <button type="button" id="theme-save-go">Save</button>
+          </div>
+          <div class="theme-save-error" id="theme-save-error"></div>
+          <div class="theme-io-row" style="margin-top:6px;">
+            <button type="button" id="theme-import-btn" class="theme-io-btn">Import</button>
+            <button type="button" id="theme-export-btn" class="theme-io-btn">Export</button>
+          </div>
+          <textarea id="theme-import-area" class="theme-import-area hidden" placeholder="Paste theme JSON here..." rows="3"></textarea>
+          <div class="theme-import-actions hidden" id="theme-import-actions">
+            <button type="button" id="theme-import-go" class="theme-io-btn">Apply</button>
+            <button type="button" id="theme-import-cancel" class="theme-io-btn">Cancel</button>
+          </div>
+        </div>
+        <button type="button" id="theme-reset-btn">Reset to Default</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/chat_activity.js?v=vc1"></script>
+  <script src="/static/chat_thinking.js?v=vc1"></script>
+  <script src="/static/chat_markdown.js?v=vc1"></script>
+  <script src="/static/chat_apply.js?v=vc1"></script>
+  <script src="/static/chat_runs.js?v=vc1"></script>
+  <script src="/static/js/theme.js?v=theme9"></script>
+  <script src="/static/js/sidebar-layout.js?v=theme9"></script>
+  <script src="/static/js/chat-sidebar.js?v=theme9"></script>
+  <script src="/static/app.js?v=theme9"></script>
+</body>
+</html>

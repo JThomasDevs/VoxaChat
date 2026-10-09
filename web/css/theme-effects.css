@@ -1,0 +1,170 @@
+/* theme-effects — background patterns, canvas layers, frosted glass (ported from Odysseus) */
+
+/* ── Background Patterns ── */
+
+:root {
+  --bg-effect-intensity: 1;
+}
+
+/* Canvas-based effects — fixed behind shell content (z-index 1+ in shell.css) */
+#synapse-canvas,
+#rain-canvas,
+#constellations-canvas,
+#perlin-flow-canvas,
+#petals-canvas,
+#sparkles-canvas,
+#embers-canvas,
+#starfield-depth-canvas,
+#ascii-fireflies-background {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--bg-effect-intensity, 1);
+}
+
+body.bg-pattern-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--bg-effect-color, var(--fg)) calc(5% * var(--bg-effect-intensity, 1)), transparent) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+  background-attachment: fixed;
+}
+
+body.bg-pattern-synapse {
+  /* CSS grid as base, canvas pulses overlay */
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--bg-effect-color, var(--fg)) calc(3.5% * var(--bg-effect-intensity, 1)), transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--bg-effect-color, var(--fg)) calc(3.5% * var(--bg-effect-intensity, 1)), transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
+}
+
+body.memory-disabled.bg-pattern-synapse {
+  background-image: none;
+}
+
+body.memory-disabled #synapse-canvas {
+  display: none;
+}
+
+body.bg-pattern-perlin-flow,
+body.bg-pattern-petals,
+body.bg-pattern-sparkles {
+  /* canvas-only backgrounds */
+}
+
+body.bg-pattern-starfield-depth,
+body.bg-pattern-ascii-fireflies {
+  /* rendered by their fixed background layer */
+}
+
+#ascii-fireflies-background {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 14px 16px;
+  overflow: hidden;
+  white-space: pre;
+  color: var(--bg-effect-color, var(--fg));
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* ── Frosted glass (body.theme-frosted) ──
+   Semi-translucent panels with backdrop blur so bg effects show through. */
+
+body.theme-frosted #sidebar,
+body.theme-frosted #app-sidebar,
+body.theme-frosted #icon-rail,
+body.theme-frosted #chat-sidebar,
+body.theme-frosted .chat-sidebar,
+body.theme-frosted .modal-content,
+body.theme-frosted .doclib-modal-content,
+body.theme-frosted .gallery-modal-content,
+body.theme-frosted .notes-pane,
+body.theme-frosted .research-pane,
+body.theme-frosted .calendar-pane,
+body.theme-frosted .cookbook-pane,
+body.theme-frosted .doc-pane,
+body.theme-frosted .doc-pane-floating,
+body.theme-frosted .cp-popover,
+body.theme-frosted .dropdown,
+body.theme-frosted .overflow-menu,
+body.theme-frosted .doc-tab-dropdown,
+body.theme-frosted .email-reader,
+body.theme-frosted .admin-card,
+body.theme-frosted .gallery-detail-menu,
+body.theme-frosted #theme-popup,
+body.theme-frosted #theme-popup .modal-content {
+  background-color: color-mix(in srgb, var(--panel, var(--bg)) 32%, transparent) !important;
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--fg, #fff) 14%, transparent) 0%,
+    color-mix(in srgb, var(--fg, #fff) 4%, transparent) 26%,
+    transparent 55%
+  ) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  border-color: color-mix(in srgb, var(--fg) 22%, transparent) !important;
+}
+
+body.theme-frosted .sidebar-header,
+body.theme-frosted .sidebar-user-bar,
+body.theme-frosted .app-sidebar-header {
+  background: transparent !important;
+}
+
+body.theme-frosted .modal-header {
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.theme-frosted .research-pane-header {
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.theme-frosted .notes-mobile-grabber {
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.theme-frosted .modal-content .admin-card,
+body.theme-frosted .doclib-modal-content .admin-card,
+body.theme-frosted .gallery-modal-content .admin-card,
+body.theme-frosted #theme-popup .admin-card {
+  background-color: color-mix(in srgb, var(--panel, var(--bg)) 10%, transparent) !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.theme-frosted .modal-content,
+body.theme-frosted .doclib-modal-content,
+body.theme-frosted .gallery-modal-content,
+body.theme-frosted .notes-pane,
+body.theme-frosted .research-pane,
+body.theme-frosted .calendar-pane,
+body.theme-frosted .cookbook-pane,
+body.theme-frosted .doc-pane,
+body.theme-frosted .doc-pane-floating,
+body.theme-frosted #app-sidebar,
+body.theme-frosted #chat-sidebar {
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 color-mix(in srgb, var(--fg, #fff) 14%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, #000 14%, transparent) !important;
+}
+
+body.theme-frosted .modal {
+  background: color-mix(in srgb, #000 12%, transparent) !important;
+}
