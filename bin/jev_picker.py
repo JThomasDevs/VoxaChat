@@ -21,7 +21,7 @@ STATE_CHAR_BUDGET = 16000
 DEFAULT_BASE_URL = "https://api.typesafe.ai"
 DEFAULT_MODEL = "jev-latest"
 DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434"
-DEFAULT_TEV1_MODEL = "tev1:0.8b"
+DEFAULT_TEV1_MODEL = "tev1:4b"
 TOOL_KEYS = [t["function"]["name"] for t in ft.TOOL_SCHEMAS]
 SENSITIVE_PRE_OLLAMA = frozenset(
     {"delete_file", "write_file", "edit_file", "move_path", "shell_run"}

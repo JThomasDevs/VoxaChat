@@ -324,7 +324,7 @@ class JevPickerAsyncTest(unittest.IsolatedAsyncioTestCase):
         try:
             os.environ.pop("TYPESAFE_API_KEY", None)
             os.environ["OLLAMA_URL"] = "http://ollama.test:11434"
-            os.environ["VOXA_TEV1_MODEL"] = "tev1:0.8b"
+            os.environ["VOXA_TEV1_MODEL"] = "tev1:4b"
             client = MagicMock()
             client.post = AsyncMock(return_value=_ok_resp("reply", 0.55))
             opt, conf, backend = await jp.pick_next_action(
@@ -339,7 +339,7 @@ class JevPickerAsyncTest(unittest.IsolatedAsyncioTestCase):
             url = client.post.await_args.args[0]
             self.assertEqual(url, "http://ollama.test:11434/v1/systemone")
             self.assertEqual(
-                client.post.await_args.kwargs["json"]["model"], "tev1:0.8b"
+                client.post.await_args.kwargs["json"]["model"], "tev1:4b"
             )
             self.assertEqual(
                 client.post.await_args.kwargs["headers"]["Authorization"],
@@ -518,9 +518,9 @@ class Tev1ConfigTest(unittest.TestCase):
         old = os.environ.get("VOXA_TEV1_MODEL")
         try:
             os.environ.pop("VOXA_TEV1_MODEL", None)
-            self.assertEqual(jp.tev1_model(), "tev1:0.8b")
-            os.environ["VOXA_TEV1_MODEL"] = "tev1:4b"
             self.assertEqual(jp.tev1_model(), "tev1:4b")
+            os.environ["VOXA_TEV1_MODEL"] = "tev1:0.8b"
+            self.assertEqual(jp.tev1_model(), "tev1:0.8b")
         finally:
             if old is None:
                 os.environ.pop("VOXA_TEV1_MODEL", None)
